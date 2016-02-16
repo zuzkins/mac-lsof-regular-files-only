@@ -411,30 +411,6 @@ gather_proc_info()
 		}
 	    }
 
-#if	DARWINV>=900
-	/*
-	 * Check for per-thread current working directories
-	 */
-	    if (!ckscko) {
-		if (tai.pbsd.pbi_flags & PROC_FLAG_THCWD) {
-	    	    (void) process_threads(pid, tai.ptinfo.pti_threadnum);
-		}
-	    }
-#endif	/* DARWINV>=900 */
-
-	/*
-	 * Print text file information.
-	 */
-	    if (!ckscko)
-		(void) process_text(pid);
-
-#ifdef	PROC_PIDLISTFILEPORTS
-	/*
-	 * Loop through the fileports
-	 */
-	    (void) process_fileports(pid, ckscko);
-#endif	/* PROC_PIDLISTFILEPORTS */
-
 	/*
 	 * Loop through the file descriptors.
 	 */
@@ -526,33 +502,6 @@ process_fds(pid, n, ckscko)
 	 */
 	    isock = 0;
 	    switch (fdp->proc_fdtype) {
-	    case PROX_FDTYPE_ATALK:
-		if (!ckscko)
-		    (void) process_atalk(pid, fdp->proc_fd);
-		break;
-	    case PROX_FDTYPE_FSEVENTS:
-		if (!ckscko)
-		    (void) process_fsevents(pid, fdp->proc_fd);
-		break;
-	    case PROX_FDTYPE_KQUEUE:
-		if (!ckscko)
-		    (void) process_kqueue(pid, fdp->proc_fd);
-		break;
-	    case PROX_FDTYPE_PIPE:
-		if (!ckscko)
-		    (void) process_pipe(pid, fdp->proc_fd);
-		break;
-	    case PROX_FDTYPE_PSEM:
-		if (!ckscko)
-		    (void) process_psem(pid, fdp->proc_fd);
-		break;
-	    case PROX_FDTYPE_SOCKET:
-		(void) process_socket(pid, fdp->proc_fd);
-		isock = 1;
-		break;
-	    case PROX_FDTYPE_PSHM:
-		(void) process_pshm(pid, fdp->proc_fd);
-		break;
 	    case PROX_FDTYPE_VNODE:
 		(void) process_vnode(pid, fdp->proc_fd);
 		break;
